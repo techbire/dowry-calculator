@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dowry Calculator - Haryana Sarcasm Edition</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FF5F6D 0%, #FFC371 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #FF5F6D;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #FF3A50;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .social-links {
+            margin-top: 10px;
+        }
+
+        .social-links img {
+            width: 25px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>How Much Dowry Are You Worth?</h1>
+    <form id="dowryCalculator">
+        <select id="salary" required>
+            <option value="">Select Your Monthly Salary</option>
+            <option value="0">₹0 - 50,000</option>
+            <option value="1">₹50,001 - 1,00,000</option>
+            <option value="2">₹1,00,001 - 1,50,000</option>
+            <option value="3">₹1,50,001 - 2,00,000</option>
+            <option value="4">₹2,00,001 and above</option>
+        </select>
+        <input type="number" id="age" placeholder="Your Age (Years)" required>
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div class="result" id="result">
+        <p><strong>Minimum Dowry:</strong> <span id="minDowry">0</span> lakh</p>
+        <p><strong>Maximum Dowry:</strong> <span id="maxDowry">0</span> lakh</p>
+        <p><strong>Gifts:</strong> <span id="gifts">None</span></p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 TechBire. All Rights Reserved.</p>
+    <div class="social-links">
+        <a href="https://www.linkedin.com/in/techbire" target="_blank">
+            <img src="https://img.icons8.com/ios-filled/50/000000/linkedin.png" alt="LinkedIn">
+        
+        <a href="https://github.com/techbire" target="_blank">
+            <img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub">
+        
+        <a href="mailto:anshtechnical@gmail.com">
+            <img src="https://img.icons8.com/ios-filled/50/000000/gmail.png" alt="Email">
+        </a>
+    </div>
+</footer>
+
+<script>
+    const form = document.getElementById('dowryCalculator');
+    const minDowryElem = document.getElementById('minDowry');
+    const maxDowryElem = document.getElementById('maxDowry');
+    const giftsElem = document.getElementById('gifts');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const salaryOption = document.getElementById('salary').value;
+        const salaryRanges = [50000, 100000, 150000, 200000]; // Salary limits for ranges
+        const salary = salaryOption === '0' ? 25000 : (salaryOption === '1' ? 75000 : (salaryOption === '2' ? 125000 : (salaryOption === '3' ? 175000 : 250000)));
+
+        const age = parseInt(document.getElementById('age').value);
+
+        let minDowry = calculateDowry(salary, age, false);
+        let maxDowry = calculateDowry(salary, age, true);
+        let gifts = getGiftsBasedOnSalary(salary);
+
+        // Update the UI with calculated values
+        minDowryElem.textContent = formatInLakhs(minDowry);
+        maxDowryElem.textContent = formatInLakhs(maxDowry);
+        giftsElem.textContent = gifts;
+    });
+
+    // Calculate dowry based on salary and age
+    function calculateDowry(salary, age, isMax) {
+        let dowryBase = salary * (isMax ? 12 : 6);  // Max dowry can be 12 times monthly salary
+
+        let dowry = dowryBase;
+
+        if (age > 30) {
+            dowry -= dowry * 0.2;  // Reduce dowry for higher age
+        } else if (age < 25) {
+            dowry += dowry * 0.15;  // Increase dowry for younger age
+        }
+
+        return Math.max(dowry, 0);  // Ensure dowry is not negative
+    }
+
+    // Format dowry in lakhs
+    function formatInLakhs(amount) {
+        return (amount / 100000).toFixed(0); // Convert to lakhs and remove decimals
+    }
+
+    // Determine gifts based on the salary range
+    function getGiftsBasedOnSalary(salary) {
+        if (salary <= 0) {
+            return 'Sirf ashirwad (Just blessings)';
+        } else if (salary < 50000) {
+            return 'Ek steel ka lota, 5 kilo besan';
+        } else if (salary >= 50000 && salary < 100000) {
+            return 'Mota blanket, Hero cycle, aur TV jo remote se nahi chalta';
+        } else if (salary >= 100000 && salary < 150000) {
+            return '1BHK ka ghar, Samsung ka purana phone, aur LG ka double door fridge';
+        } else if (salary >= 150000 && salary < 200000) {
+            return 'Fortuner gadi, imported rasgulle ka dabba, aur Automatic washing machine jo kabhi kharaab nahi hoti';
+        } else {
+            return 'Ek helicopter, gold-plated iPhone, aur har season ke kapde';
+        }
+    }
+</script>
+
+</body>
+</html>
